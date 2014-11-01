@@ -44,4 +44,22 @@ if __name__ == "__main__":
     for key, value in sorted(character_sets.items()):
         prompt += key + ". " + value + os.linesep
 
-    selected_charset = input(prompt).zfill(2)
+    while True:
+        try:
+            selected_charset = character_sets[input(prompt).zfill(2)]
+        except KeyError:
+            print("Please select a valid character set")
+            continue
+        else:
+            break
+
+    prompt = "Specify the maximum possible length of the password: "
+
+    while True:
+        try:
+            password_length = int(input(prompt))
+        except ValueError:
+            print("Password length must be an integer")
+            continue
+        else:
+            break
