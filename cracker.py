@@ -21,7 +21,7 @@ class Cracker:
     ALPHA_MIXED_NUMERIC_PUNCTUATION = ALPHA_MIXED_NUMERIC + PUNCTUATION
 
     @staticmethod
-    def search_space(charset, maxlength):
+    def __search_space(charset, maxlength):
         return (
             ''.join(candidate) for candidate in
             itertools.chain.from_iterable(
@@ -30,6 +30,8 @@ class Cracker:
             )
         )
 
+    def set_hash(self, hash):
+        self.__hash = hash
 
 if __name__ == "__main__":
     character_sets = {"01": Cracker.ALPHA_LOWER, "02": Cracker.ALPHA_UPPER, "03": Cracker.ALPHA_MIXED,
