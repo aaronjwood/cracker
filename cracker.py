@@ -40,8 +40,8 @@ if __name__ == "__main__":
                       "13": Cracker.ALPHA_LOWER_NUMERIC_PUNCTUATION, "14": Cracker.ALPHA_UPPER_NUMERIC_PUNCTUATION,
                       "15": Cracker.ALPHA_MIXED_NUMERIC_PUNCTUATION}
 
-prompt = "Specify the character set to use:" + os.linesep
-for key, value in sorted(character_sets.items()):
-    prompt += key + ". " + value + os.linesep
+    prompt = "Specify the character set to use:" + os.linesep
+    for key, value in sorted(character_sets.items()):
+        prompt += key + ". " + value + os.linesep
 
-selected_charset = input(prompt).zfill(2)
+    selected_charset = input(prompt).zfill(2)
