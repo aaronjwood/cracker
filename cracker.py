@@ -33,6 +33,9 @@ class Cracker:
     def set_hash(self, hash):
         self.__hash = hash
 
+    def set_hash_type(self, hash_type):
+        self.__hash_type = hash_type
+
 if __name__ == "__main__":
     character_sets = {"01": Cracker.ALPHA_LOWER, "02": Cracker.ALPHA_UPPER, "03": Cracker.ALPHA_MIXED,
                       "04": Cracker.NUMERIC, "05": Cracker.ALPHA_LOWER_NUMERIC, "06": Cracker.ALPHA_UPPER_NUMERIC,
