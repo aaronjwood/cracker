@@ -65,7 +65,6 @@ if __name__ == "__main__":
         "08": "SHA256",
         "09": "SHA384",
         "10": "SHA512"
-
     }
 
     prompt = "Specify the character set to use:" + os.linesep
