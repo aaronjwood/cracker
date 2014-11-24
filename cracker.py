@@ -4,21 +4,23 @@ import os
 
 
 class Cracker:
-    ALPHA_LOWER = string.ascii_lowercase
-    ALPHA_UPPER = string.ascii_uppercase
-    ALPHA_MIXED = string.ascii_letters
-    PUNCTUATION = string.punctuation
-    NUMERIC = ''.join(map(str, range(0, 10)))
-    ALPHA_LOWER_NUMERIC = ALPHA_LOWER + NUMERIC
-    ALPHA_UPPER_NUMERIC = ALPHA_UPPER + NUMERIC
-    ALPHA_MIXED_NUMERIC = ALPHA_MIXED + NUMERIC
-    ALPHA_LOWER_PUNCTUATION = ALPHA_LOWER + PUNCTUATION
-    ALPHA_UPPER_PUNCTUATION = ALPHA_UPPER + PUNCTUATION
-    ALPHA_MIXED_PUNCTUATION = ALPHA_MIXED + PUNCTUATION
-    NUMERIC_PUNCTUATION = NUMERIC + PUNCTUATION
-    ALPHA_LOWER_NUMERIC_PUNCTUATION = ALPHA_LOWER_NUMERIC + PUNCTUATION
-    ALPHA_UPPER_NUMERIC_PUNCTUATION = ALPHA_UPPER_NUMERIC + PUNCTUATION
-    ALPHA_MIXED_NUMERIC_PUNCTUATION = ALPHA_MIXED_NUMERIC + PUNCTUATION
+    ALPHA_LOWER = (string.ascii_lowercase,)
+    ALPHA_UPPER = (string.ascii_uppercase,)
+    ALPHA_MIXED = (string.ascii_lowercase, string.ascii_uppercase)
+    PUNCTUATION = (string.punctuation,)
+    NUMERIC = (''.join(map(str, range(0, 10))),)
+    ALPHA_LOWER_NUMERIC = (string.ascii_lowercase, ''.join(map(str, range(0, 10))))
+    ALPHA_UPPER_NUMERIC = (string.ascii_uppercase, ''.join(map(str, range(0, 10))))
+    ALPHA_MIXED_NUMERIC = (string.ascii_lowercase, string.ascii_uppercase, ''.join(map(str, range(0, 10))))
+    ALPHA_LOWER_PUNCTUATION = (string.ascii_lowercase, string.punctuation)
+    ALPHA_UPPER_PUNCTUATION = (string.ascii_uppercase, string.punctuation)
+    ALPHA_MIXED_PUNCTUATION = (string.ascii_lowercase, string.ascii_uppercase, string.punctuation)
+    NUMERIC_PUNCTUATION = (''.join(map(str, range(0, 10))), string.punctuation)
+    ALPHA_LOWER_NUMERIC_PUNCTUATION = (string.ascii_lowercase, ''.join(map(str, range(0, 10))), string.punctuation)
+    ALPHA_UPPER_NUMERIC_PUNCTUATION = (string.ascii_uppercase, ''.join(map(str, range(0, 10))), string.punctuation)
+    ALPHA_MIXED_NUMERIC_PUNCTUATION = (
+        string.ascii_lowercase, string.ascii_uppercase, ''.join(map(str, range(0, 10))), string.punctuation
+    )
 
     def __init__(self, hash_type, hash):
         self.__hash_type = hash_type
@@ -69,7 +71,7 @@ if __name__ == "__main__":
 
     prompt = "Specify the character set to use:" + os.linesep
     for key, value in sorted(character_sets.items()):
-        prompt += key + ". " + value + os.linesep
+        prompt += key + ". " + ''.join(value) + os.linesep
 
     while True:
         try:
