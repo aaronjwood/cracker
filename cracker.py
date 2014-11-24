@@ -45,6 +45,20 @@ if __name__ == "__main__":
                       "13": Cracker.ALPHA_LOWER_NUMERIC_PUNCTUATION, "14": Cracker.ALPHA_UPPER_NUMERIC_PUNCTUATION,
                       "15": Cracker.ALPHA_MIXED_NUMERIC_PUNCTUATION}
 
+    hashes = {
+        "01": "MD5",
+        "02": "MD4",
+        "03": "MD2",
+        "04": "LM",
+        "05": "NTLM",
+        "06": "SHA1",
+        "07": "SHA224",
+        "08": "SHA256",
+        "09": "SHA384",
+        "10": "SHA512"
+
+    }
+
     prompt = "Specify the character set to use:" + os.linesep
     for key, value in sorted(character_sets.items()):
         prompt += key + ". " + value + os.linesep
@@ -66,5 +80,17 @@ if __name__ == "__main__":
         except ValueError:
             print("Password length must be an integer")
             continue
+        else:
+            break
+
+    prompt = "Specify the hash's type:" + os.linesep
+    for key, value in sorted(hashes.items()):
+        prompt += key + ". " + value + os.linesep
+
+    while True:
+        try:
+            hash_type = hashes[input(prompt).zfill(2)]
+        except KeyError:
+            print("Please select a supported hash type")
         else:
             break
