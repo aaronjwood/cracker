@@ -38,13 +38,23 @@ class Cracker:
 
 
 if __name__ == "__main__":
-    character_sets = {"01": Cracker.ALPHA_LOWER, "02": Cracker.ALPHA_UPPER, "03": Cracker.ALPHA_MIXED,
-                      "04": Cracker.NUMERIC, "05": Cracker.ALPHA_LOWER_NUMERIC, "06": Cracker.ALPHA_UPPER_NUMERIC,
-                      "07": Cracker.ALPHA_MIXED_NUMERIC, "08": Cracker.PUNCTUATION,
-                      "09": Cracker.ALPHA_LOWER_PUNCTUATION, "10": Cracker.ALPHA_UPPER_PUNCTUATION,
-                      "11": Cracker.ALPHA_MIXED_PUNCTUATION, "12": Cracker.NUMERIC_PUNCTUATION,
-                      "13": Cracker.ALPHA_LOWER_NUMERIC_PUNCTUATION, "14": Cracker.ALPHA_UPPER_NUMERIC_PUNCTUATION,
-                      "15": Cracker.ALPHA_MIXED_NUMERIC_PUNCTUATION}
+    character_sets = {
+        "01": Cracker.ALPHA_LOWER,
+        "02": Cracker.ALPHA_UPPER,
+        "03": Cracker.ALPHA_MIXED,
+        "04": Cracker.NUMERIC,
+        "05": Cracker.ALPHA_LOWER_NUMERIC,
+        "06": Cracker.ALPHA_UPPER_NUMERIC,
+        "07": Cracker.ALPHA_MIXED_NUMERIC,
+        "08": Cracker.PUNCTUATION,
+        "09": Cracker.ALPHA_LOWER_PUNCTUATION,
+        "10": Cracker.ALPHA_UPPER_PUNCTUATION,
+        "11": Cracker.ALPHA_MIXED_PUNCTUATION,
+        "12": Cracker.NUMERIC_PUNCTUATION,
+        "13": Cracker.ALPHA_LOWER_NUMERIC_PUNCTUATION,
+        "14": Cracker.ALPHA_UPPER_NUMERIC_PUNCTUATION,
+        "15": Cracker.ALPHA_MIXED_NUMERIC_PUNCTUATION
+    }
 
     hashes = {
         "01": "MD5",
