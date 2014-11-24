@@ -1,6 +1,7 @@
 import itertools
 import string
 import os
+import hashlib
 
 
 class Cracker:
