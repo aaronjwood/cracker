@@ -27,6 +27,9 @@ class Cracker:
         self.__hash_type = hash_type
         self.__hash = hash
 
+    def generate_hash(self, data):
+        return hashlib.new(self.__hash_type.lower(), data.encode("utf-8")).hexdigest()
+
     @staticmethod
     def __search_space(charset, maxlength):
         return (
