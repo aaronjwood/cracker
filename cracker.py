@@ -20,6 +20,10 @@ class Cracker:
     ALPHA_UPPER_NUMERIC_PUNCTUATION = ALPHA_UPPER_NUMERIC + PUNCTUATION
     ALPHA_MIXED_NUMERIC_PUNCTUATION = ALPHA_MIXED_NUMERIC + PUNCTUATION
 
+    def __init__(self, hash_type, hash):
+        self.__hash_type = hash_type
+        self.__hash = hash
+
     @staticmethod
     def __search_space(charset, maxlength):
         return (
@@ -29,12 +33,6 @@ class Cracker:
                 range(1, maxlength + 1)
             )
         )
-
-    def set_hash(self, hash):
-        self.__hash = hash
-
-    def set_hash_type(self, hash_type):
-        self.__hash_type = hash_type
 
 
 if __name__ == "__main__":
