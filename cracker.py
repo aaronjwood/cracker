@@ -36,6 +36,7 @@ class Cracker:
     def set_hash_type(self, hash_type):
         self.__hash_type = hash_type
 
+
 if __name__ == "__main__":
     character_sets = {"01": Cracker.ALPHA_LOWER, "02": Cracker.ALPHA_UPPER, "03": Cracker.ALPHA_MIXED,
                       "04": Cracker.NUMERIC, "05": Cracker.ALPHA_LOWER_NUMERIC, "06": Cracker.ALPHA_UPPER_NUMERIC,
@@ -72,7 +73,7 @@ if __name__ == "__main__":
         else:
             break
 
-    prompt = "Specify the maximum possible length of the password: "
+    prompt = os.linesep + "Specify the maximum possible length of the password: "
 
     while True:
         try:
@@ -83,7 +84,7 @@ if __name__ == "__main__":
         else:
             break
 
-    prompt = "Specify the hash's type:" + os.linesep
+    prompt = os.linesep + "Specify the hash's type:" + os.linesep
     for key, value in sorted(hashes.items()):
         prompt += key + ". " + value + os.linesep
 
