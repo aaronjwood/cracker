@@ -63,14 +63,13 @@ if __name__ == "__main__":
     hashes = {
         "01": "MD5",
         "02": "MD4",
-        "03": "MD2",
-        "04": "LM",
-        "05": "NTLM",
-        "06": "SHA1",
-        "07": "SHA224",
-        "08": "SHA256",
-        "09": "SHA384",
-        "10": "SHA512"
+        "03": "LM",
+        "04": "NTLM",
+        "05": "SHA1",
+        "06": "SHA224",
+        "07": "SHA256",
+        "08": "SHA384",
+        "09": "SHA512"
     }
 
     prompt = "Specify the character set to use:" + os.linesep
