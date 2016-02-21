@@ -48,7 +48,7 @@ class Cracker:
     def attack(self, charset, maxlength):
         combined_charset = ''.join(charset)
         for attempt in self.__search_space(combined_charset, maxlength):
-            if self.__hash == self.generate_hash(attempt):
+            if self.__hash.lower() == self.generate_hash(attempt):
                 print("{}Match found! Password is {}".format(os.linesep, attempt))
                 return
         print("{}No match found".format(os.linesep))
