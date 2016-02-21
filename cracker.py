@@ -2,6 +2,7 @@ import itertools
 import string
 import os
 import hashlib
+import time
 
 
 class Cracker:
@@ -131,4 +132,9 @@ if __name__ == "__main__":
             break
 
     cracker = Cracker(hash_type, user_hash)
+
+    start_time = time.time()
+
     cracker.attack(selected_charset, password_length)
+
+    print("Took {} seconds".format(time.time() - start_time))
