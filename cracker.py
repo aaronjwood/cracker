@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            password_length = int(input(prompt))
+            password_length = int(raw_input(prompt))
         except ValueError:
             print("Password length must be an integer")
             continue
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            hash_type = hashes[input(prompt).zfill(2)]
+            hash_type = hashes[raw_input(prompt).zfill(2)]
         except KeyError:
             print("Please select a supported hash type")
         else:
