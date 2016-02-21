@@ -81,51 +81,51 @@ if __name__ == "__main__":
         "09": "SHA512"
     }
 
-    prompt = "Specify the character set to use:" + os.linesep
+    prompt = "Specify the character set to use:{}{}".format(os.linesep, os.linesep)
     for key, value in sorted(character_sets.items()):
-        prompt += key + ". " + ''.join(value) + os.linesep
+        prompt += "{}. {}{}".format(key, ''.join(value), os.linesep)
 
     while True:
         try:
             charset = raw_input(prompt).zfill(2)
             selected_charset = character_sets[charset]
         except KeyError:
-            print("Please select a valid character set")
+            print("{}Please select a valid character set{}".format(os.linesep, os.linesep))
             continue
         else:
             break
 
-    prompt = os.linesep + "Specify the maximum possible length of the password: "
+    prompt = "{}Specify the maximum possible length of the password: ".format(os.linesep)
 
     while True:
         try:
             password_length = int(raw_input(prompt))
         except ValueError:
-            print("Password length must be an integer")
+            print("{}Password length must be an integer".format(os.linesep))
             continue
         else:
             break
 
-    prompt = os.linesep + "Specify the hash's type:" + os.linesep
+    prompt = "{}Specify the hash's type:{}".format(os.linesep, os.linesep)
     for key, value in sorted(hashes.items()):
-        prompt += key + ". " + value + os.linesep
+        prompt += "{}. {}{}".format(key, value, os.linesep)
 
     while True:
         try:
             hash_type = hashes[raw_input(prompt).zfill(2)]
         except KeyError:
-            print("Please select a supported hash type")
+            print("{}Please select a supported hash type".format(os.linesep))
             continue
         else:
             break
 
-    prompt = os.linesep + "Specify the hash to be attacked: "
+    prompt = "{}Specify the hash to be attacked: ".format(os.linesep)
 
     while True:
         try:
             user_hash = raw_input(prompt)
         except ValueError:
-            print("Something is wrong with the format of the hash. Please enter a valid hash")
+            print("{}Something is wrong with the format of the hash. Please enter a valid hash".format(os.linesep))
             continue
         else:
             break
