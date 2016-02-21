@@ -28,7 +28,9 @@ class Cracker:
         self.__hash = hash
 
     def generate_hash(self, data):
-        return hashlib.new(self.__hash_type.lower(), data.encode("utf-8")).hexdigest()
+        hasher = hashlib.new(self.__hash_type.lower())
+        hasher.update(data)
+        return hasher.hexdigest()
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -43,9 +45,7 @@ class Cracker:
     def attack(self, charset, maxlength):
         combined_charset = ''.join(charset)
         for attempt in self.__search_space(combined_charset, maxlength):
-            algorithm = getattr(hashlib, self.__hash_type.lower())()
-            algorithm.update(attempt)
-            if self.__hash == algorithm.hexdigest():
+            if self.__hash == self.generate_hash(attempt):
                 print("Match found! Password is {}".format(attempt))
                 break
 
