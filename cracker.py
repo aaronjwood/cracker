@@ -43,7 +43,9 @@ class Cracker:
     def attack(self, charset, maxlength):
         combined_charset = ''.join(charset)
         for attempt in self.__search_space(combined_charset, maxlength):
-            if self.__hash == attempt:
+            algorithm = getattr(hashlib, self.__hash_type.lower())()
+            algorithm.update(attempt)
+            if self.__hash == algorithm.hexdigest():
                 print("Match found! Password is {}".format(attempt))
                 break
 
