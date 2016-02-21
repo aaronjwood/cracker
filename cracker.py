@@ -40,10 +40,10 @@ class Cracker:
             )
         )
 
-    def attack(self, charset, length):
+    def attack(self, charset, maxlength):
         combined_charset = ''.join(charset)
-        for attempt in list(self.__search_space(combined_charset, length)):
-            if hash == attempt:
+        for attempt in self.__search_space(combined_charset, maxlength):
+            if self.__hash == attempt:
                 print("Match found! Password is {}".format(attempt))
                 break
 
@@ -127,3 +127,6 @@ if __name__ == "__main__":
             continue
         else:
             break
+
+    cracker = Cracker(hash_type, user_hash)
+    cracker.attack(selected_charset, password_length)
