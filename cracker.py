@@ -49,9 +49,10 @@ class Cracker:
         combined_charset = ''.join(charset)
         for attempt in self.__search_space(combined_charset, maxlength):
             if self.__hash == self.generate_hash(attempt):
-                print("Match found! Password is {}".format(attempt))
-                break
-                
+                print("{}Match found! Password is {}".format(os.linesep, attempt))
+                return
+        print("{}No match found".format(os.linesep))
+
 
 if __name__ == "__main__":
     character_sets = {
