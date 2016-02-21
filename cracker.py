@@ -78,7 +78,8 @@ if __name__ == "__main__":
 
     while True:
         try:
-            selected_charset = character_sets[input(prompt).zfill(2)]
+            charset = raw_input(prompt).zfill(2)
+            selected_charset = character_sets[charset]
         except KeyError:
             print("Please select a valid character set")
             continue
