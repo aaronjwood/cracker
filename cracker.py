@@ -29,9 +29,11 @@ class Cracker:
         self.__hash = hash
 
     def generate_hash(self, data):
-        hasher = hashlib.new(self.__hash_type.lower())
-        hasher.update(data)
-        return hasher.hexdigest()
+        type = self.__hash_type.lower()
+        if type == "ntlm":
+            return hashlib.new("md4", data.encode("utf-16le")).hexdigest()
+
+        return hashlib.new(type, data).hexdigest()
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -49,7 +51,7 @@ class Cracker:
             if self.__hash == self.generate_hash(attempt):
                 print("Match found! Password is {}".format(attempt))
                 break
-
+                
 
 if __name__ == "__main__":
     character_sets = {
