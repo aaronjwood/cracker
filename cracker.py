@@ -3,6 +3,7 @@ import string
 import os
 import hashlib
 import time
+import threading
 
 
 class Cracker:
@@ -46,8 +47,12 @@ class Cracker:
         )
 
     def attack(self, charset, maxlength):
-        combined_charset = ''.join(charset)
-        for attempt in self.__search_space(combined_charset, maxlength):
+        for i in range(len(charset)):
+            print(charset[i])
+            t = threading.Thread(target=self.__work, args=(charset[i], maxlength))
+
+    def __work(self, charset, maxlength):
+        for attempt in self.__search_space(charset, maxlength):
             if self.__hash.lower() == self.generate_hash(attempt):
                 print("{}Match found! Password is {}".format(os.linesep, attempt))
                 return
