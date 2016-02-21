@@ -115,3 +115,14 @@ if __name__ == "__main__":
             print("Please select a supported hash type")
         else:
             break
+
+    prompt = os.linesep + "Specify the hash to be attacked: "
+
+    while True:
+        try:
+            user_hash = raw_input(prompt)
+        except ValueError:
+            print("Something is wrong with the format of the hash. Please enter a valid hash")
+            continue
+        else:
+            break
