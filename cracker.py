@@ -113,6 +113,7 @@ if __name__ == "__main__":
             hash_type = hashes[raw_input(prompt).zfill(2)]
         except KeyError:
             print("Please select a supported hash type")
+            continue
         else:
             break
 
