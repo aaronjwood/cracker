@@ -40,6 +40,13 @@ class Cracker:
             )
         )
 
+    def attack(self, charset, length):
+        combined_charset = ''.join(charset)
+        for attempt in list(self.__search_space(combined_charset, length)):
+            if hash == attempt:
+                print("Match found! Password is {}".format(attempt))
+                break
+
 
 if __name__ == "__main__":
     character_sets = {
