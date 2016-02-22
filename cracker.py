@@ -3,7 +3,7 @@ import string
 import os
 import hashlib
 import time
-import threading
+import multiprocessing
 
 
 class Cracker:
@@ -28,13 +28,15 @@ class Cracker:
     def __init__(self, hash_type, hash):
         self.__hash_type = hash_type
         self.__hash = hash
+        self.__workers = []
+        self.__working = False
 
     def generate_hash(self, data):
         type = self.__hash_type.lower()
         if type == "ntlm":
             return hashlib.new("md4", data.encode("utf-16le")).hexdigest()
 
-        return hashlib.new(type, data).hexdigest()
+        return hashlib.new(type, data.encode("utf-8")).hexdigest()
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -47,16 +49,30 @@ class Cracker:
         )
 
     def attack(self, charset, maxlength):
-        for i in range(len(charset)):
-            print(charset[i])
-            t = threading.Thread(target=self.__work, args=(charset[i], maxlength))
+        self.__working = True
 
-    def __work(self, charset, maxlength):
+        combined_set = ''.join(charset)
+        p = multiprocessing.Process(target=self.work, args=(combined_set, maxlength))
+        self.__workers.append(p)
+        p.start()
+
+        for i in range(len(charset)):
+            p = multiprocessing.Process(target=self.work, args=(charset[i], maxlength))
+            self.__workers.append(p)
+            p.start()
+
+        if self.__working:
+            print("{}No match found".format(os.linesep))
+
+    def work(self, charset, maxlength):
         for attempt in self.__search_space(charset, maxlength):
+            if not self.__working:
+                return
+
             if self.__hash.lower() == self.generate_hash(attempt):
+                self.__working = False
                 print("{}Match found! Password is {}".format(os.linesep, attempt))
                 return
-        print("{}No match found".format(os.linesep))
 
 
 if __name__ == "__main__":
@@ -96,7 +112,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            charset = raw_input(prompt).zfill(2)
+            charset = input(prompt).zfill(2)
             selected_charset = character_sets[charset]
         except KeyError:
             print("{}Please select a valid character set{}".format(os.linesep, os.linesep))
@@ -108,7 +124,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            password_length = int(raw_input(prompt))
+            password_length = int(input(prompt))
         except ValueError:
             print("{}Password length must be an integer".format(os.linesep))
             continue
@@ -121,7 +137,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            hash_type = hashes[raw_input(prompt).zfill(2)]
+            hash_type = hashes[input(prompt).zfill(2)]
         except KeyError:
             print("{}Please select a supported hash type".format(os.linesep))
             continue
@@ -132,7 +148,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            user_hash = raw_input(prompt)
+            user_hash = input(prompt)
         except ValueError:
             print("{}Something is wrong with the format of the hash. Please enter a valid hash".format(os.linesep))
             continue
