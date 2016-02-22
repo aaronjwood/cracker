@@ -28,8 +28,6 @@ class Cracker:
     def __init__(self, hash_type, hash):
         self.__hash_type = hash_type
         self.__hash = hash
-        self.__workers = []
-        self.__working = False
 
     def generate_hash(self, data):
         type = self.__hash_type.lower()
@@ -48,31 +46,19 @@ class Cracker:
             )
         )
 
-    def attack(self, charset, maxlength):
-        self.__working = True
-
-        combined_set = ''.join(charset)
-        p = multiprocessing.Process(target=self.work, args=(combined_set, maxlength))
-        self.__workers.append(p)
-        p.start()
-
-        for i in range(len(charset)):
-            p = multiprocessing.Process(target=self.work, args=(charset[i], maxlength))
-            self.__workers.append(p)
-            p.start()
-
-        if self.__working:
-            print("{}No match found".format(os.linesep))
-
-    def work(self, charset, maxlength):
+    def attack(self, q, charset, maxlength):
         for attempt in self.__search_space(charset, maxlength):
-            if not self.__working:
+            if not q.empty():
                 return
 
             if self.__hash.lower() == self.generate_hash(attempt):
-                self.__working = False
-                print("{}Match found! Password is {}".format(os.linesep, attempt))
+                q.put("{}Match found! Password is {}".format(os.linesep, attempt))
                 return
+
+    @staticmethod
+    def work(work_queue, done_queue, charset, maxlength):
+        obj = work_queue.get()
+        obj.attack(done_queue, charset, maxlength)
 
 
 if __name__ == "__main__":
@@ -155,10 +141,25 @@ if __name__ == "__main__":
         else:
             break
 
+    work_queue = multiprocessing.Queue()
+    done_queue = multiprocessing.Queue()
     cracker = Cracker(hash_type, user_hash)
 
     start_time = time.time()
 
-    cracker.attack(selected_charset, password_length)
+    p = multiprocessing.Process(target=Cracker.work,
+                                args=(work_queue, done_queue, ''.join(selected_charset), password_length))
+    work_queue.put(cracker)
+    p.start()
+
+    for i in range(len(selected_charset)):
+        p = multiprocessing.Process(target=Cracker.work,
+                                    args=(work_queue, done_queue, selected_charset[i], password_length))
+        work_queue.put(cracker)
+        p.start()
+
+    result = done_queue.get()
+    done_queue.put("DONE")
+    print(result)
 
     print("Took {} seconds".format(time.time() - start_time))
