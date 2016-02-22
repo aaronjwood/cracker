@@ -13,6 +13,7 @@ Currently, the supported hashes are:
 * SHA256
 * SHA384
 * SHA512
+
 It tries to be more efficient by parallelizing the work performed on different character sets.
 For example, if the character set abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ is selected then one worker will work with abcdefghijklmnopqrstuvwxyz, another worker will work with ABCDEFGHIJKLMNOPQRSTUVWXYZ, and the last worker will work with abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.
 
