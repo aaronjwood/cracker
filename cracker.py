@@ -52,8 +52,10 @@ class Cracker:
                 return
 
             if self.__hash.lower() == self.generate_hash(attempt):
-                q.put("{}Match found! Password is {}".format(os.linesep, attempt))
+                q.put("FOUND")
+                q.put("{}Match found! Password is {}{}".format(os.linesep, attempt, os.linesep))
                 return
+        q.put("NOT FOUND")
 
     @staticmethod
     def work(work_queue, done_queue, charset, maxlength):
@@ -141,6 +143,7 @@ if __name__ == "__main__":
         else:
             break
 
+    processes = []
     work_queue = multiprocessing.Queue()
     done_queue = multiprocessing.Queue()
     cracker = Cracker(hash_type, user_hash)
@@ -149,17 +152,29 @@ if __name__ == "__main__":
 
     p = multiprocessing.Process(target=Cracker.work,
                                 args=(work_queue, done_queue, ''.join(selected_charset), password_length))
+    processes.append(p)
     work_queue.put(cracker)
     p.start()
 
     for i in range(len(selected_charset)):
         p = multiprocessing.Process(target=Cracker.work,
                                     args=(work_queue, done_queue, selected_charset[i], password_length))
+        processes.append(p)
         work_queue.put(cracker)
         p.start()
 
-    result = done_queue.get()
-    done_queue.put("DONE")
-    print(result)
+    failures = 0
+    while True:
+        data = done_queue.get()
+        if data == "NOT FOUND":
+            failures += 1
+        elif data == "FOUND":
+            done_queue.put("DONE")
+            print(done_queue.get())
+            break
+
+        if failures == len(processes):
+            print("{}No matches found{}".format(os.linesep, os.linesep))
+            break
 
     print("Took {} seconds".format(time.time() - start_time))
