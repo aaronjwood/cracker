@@ -6,7 +6,7 @@ import time
 import multiprocessing
 
 
-class Cracker:
+class Cracker(object):
     ALPHA_LOWER = (string.ascii_lowercase,)
     ALPHA_UPPER = (string.ascii_uppercase,)
     ALPHA_MIXED = (string.ascii_lowercase, string.ascii_uppercase)
