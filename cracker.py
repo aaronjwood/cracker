@@ -26,10 +26,21 @@ class Cracker(object):
     )
 
     def __init__(self, hash_type, hash):
+        """
+        Sets the hash type and actual hash to be used
+        :param hash_type:
+        :param hash:
+        :return:
+        """
         self.__hash_type = hash_type
         self.__hash = hash
 
     def generate_hash(self, data):
+        """
+        Generates a hash of the required type
+        :param data:
+        :return:
+        """
         type = self.__hash_type.lower()
         if type == "ntlm":
             return hashlib.new("md4", data.encode("utf-16le")).hexdigest()
@@ -38,6 +49,14 @@ class Cracker(object):
 
     @staticmethod
     def __search_space(charset, maxlength):
+        """
+        Generates the search space for us to attack using a generator
+        We could never pregenerate this as it would take too much time and require godly amounts of memory
+        For example, generating a search space with a rough size of 52^8 would take over 50TB of RAM
+        :param charset:
+        :param maxlength:
+        :return:
+        """
         return (
             ''.join(candidate) for candidate in
             itertools.chain.from_iterable(
@@ -47,6 +66,13 @@ class Cracker(object):
         )
 
     def attack(self, q, charset, maxlength):
+        """
+        Tries all possible combinations in the search space to try and find a match
+        :param q:
+        :param charset:
+        :param maxlength:
+        :return:
+        """
         for attempt in self.__search_space(charset, maxlength):
             if not q.empty():
                 return
@@ -59,6 +85,14 @@ class Cracker(object):
 
     @staticmethod
     def work(work_queue, done_queue, charset, maxlength):
+        """
+        Take the data given to us from some process and kick off the work
+        :param work_queue:
+        :param done_queue:
+        :param charset:
+        :param maxlength:
+        :return:
+        """
         obj = work_queue.get()
         obj.attack(done_queue, charset, maxlength)
 
