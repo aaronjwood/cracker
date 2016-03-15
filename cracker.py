@@ -28,8 +28,8 @@ class Cracker(object):
     def __init__(self, hash_type, hash):
         """
         Sets the hash type and actual hash to be used
-        :param hash_type:
-        :param hash:
+        :param hash_type: What algorithm we want to use
+        :param hash: The hash in base64 format
         :return:
         """
         self.__hash_type = hash_type
@@ -38,7 +38,7 @@ class Cracker(object):
     def generate_hash(self, data):
         """
         Generates a hash of the required type
-        :param data:
+        :param data: What will be hashed
         :return:
         """
         type = self.__hash_type.lower()
@@ -53,8 +53,8 @@ class Cracker(object):
         Generates the search space for us to attack using a generator
         We could never pregenerate this as it would take too much time and require godly amounts of memory
         For example, generating a search space with a rough size of 52^8 would take over 50TB of RAM
-        :param charset:
-        :param maxlength:
+        :param charset: The character set to generate a search space for
+        :param maxlength: Maximum length the search space should be capped at
         :return:
         """
         return (
@@ -68,9 +68,9 @@ class Cracker(object):
     def attack(self, q, charset, maxlength):
         """
         Tries all possible combinations in the search space to try and find a match
-        :param q:
-        :param charset:
-        :param maxlength:
+        :param q: Work queue
+        :param charset: The character set to attack
+        :param maxlength: Maximum length of the character set to attack
         :return:
         """
         for attempt in self.__search_space(charset, maxlength):
@@ -87,10 +87,10 @@ class Cracker(object):
     def work(work_queue, done_queue, charset, maxlength):
         """
         Take the data given to us from some process and kick off the work
-        :param work_queue:
-        :param done_queue:
-        :param charset:
-        :param maxlength:
+        :param work_queue: This is what will give us work from some other process
+        :param done_queue: Used to signal the parent from some other process when we are done
+        :param charset: The character set to work on
+        :param maxlength: Maximum length of the character set
         :return:
         """
         obj = work_queue.get()
