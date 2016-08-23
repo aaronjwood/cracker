@@ -203,8 +203,8 @@ if __name__ == "__main__":
         if data == "NOT FOUND":
             failures += 1
         elif data == "FOUND":
-            done_queue.put("DONE")
             print(done_queue.get())
+            done_queue.put("DONE")
             break
 
         if failures == len(processes):
