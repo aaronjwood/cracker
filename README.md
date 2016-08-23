@@ -35,6 +35,6 @@ This is less efficient than working with threads in general but is a necessary e
 
 Due to the performance explanations above *I would not recommend using Python for these kinds of tools.*
 You could consider this project an example of how to accomplish such a task using Python and an example of what kinds of issues you'd run into.
-Sure, the tool is certainly usable and works as it should, but if you are serious about building these kinds of tools I would look at using C, C++, or Go.
-In fact, if you want an industry-competitive tool don't bother with Go or writing anything that runs on a CPU.
+Sure, the tool is certainly usable and works as it should, but if you are serious about building these kinds of tools I would look at using C, C++, Rust, or Go.
+Actually, I take that back. If you want an industry-competitive tool don't bother targeting the CPU.
 Instead use C/C++ that will run on GPUs and utilize CUDA, OpenCL, or ACL.
