@@ -43,11 +43,10 @@ class Cracker(object):
         :param data: What will be hashed
         :return:
         """
-        type = self.__hash_type.lower()
-        if type == "ntlm":
+        if self.__hash_type == "ntlm":
             return hashlib.new("md4", data.encode("utf-16le")).hexdigest()
 
-        return hashlib.new(type, data.encode("utf-8")).hexdigest()
+        return hashlib.new(self.__hash_type, data.encode("utf-8")).hexdigest()
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -79,7 +78,7 @@ class Cracker(object):
             if not q.empty():
                 return
 
-            if self.__hash.lower() == self.generate_hash(attempt):
+            if self.__hash == self.generate_hash(attempt):
                 q.put("FOUND")
                 q.put("{}Match found! Password is {}{}".format(os.linesep, attempt, os.linesep))
                 return
@@ -184,7 +183,7 @@ if __name__ == "__main__":
     processes = []
     work_queue = multiprocessing.Queue()
     done_queue = multiprocessing.Queue()
-    cracker = Cracker(hash_type, user_hash)
+    cracker = Cracker(hash_type.lower(), user_hash.lower())
 
     start_time = time.time()
 
