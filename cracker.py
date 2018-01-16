@@ -179,6 +179,8 @@ if __name__ == "__main__":
         else:
             break
 
+    print("{}Cracking...{}".format(os.linesep, os.linesep), flush=True)
+
     processes = []
     work_queue = multiprocessing.Queue()
     done_queue = multiprocessing.Queue()
