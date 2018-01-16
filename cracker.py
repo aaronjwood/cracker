@@ -194,12 +194,13 @@ if __name__ == "__main__":
     work_queue.put(cracker)
     p.start()
 
-    for i in range(len(selected_charset)):
-        p = multiprocessing.Process(target=Cracker.work,
-                                    args=(work_queue, done_queue, selected_charset[i], password_length))
-        processes.append(p)
-        work_queue.put(cracker)
-        p.start()
+    if len(selected_charset) > 1:
+        for i in range(len(selected_charset)):
+            p = multiprocessing.Process(target=Cracker.work,
+                                        args=(work_queue, done_queue, selected_charset[i], password_length))
+            processes.append(p)
+            work_queue.put(cracker)
+            p.start()
 
     failures = 0
     while True:
