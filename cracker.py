@@ -41,6 +41,7 @@ class Cracker(object):
         self.__progress_interval = progress_interval
         self.__hash_type = hash_type
         self.__hash = hash
+        self.__hashers = {}
 
     def generate_hash(self, data):
         """
@@ -48,10 +49,14 @@ class Cracker(object):
         :param data: What will be hashed
         :return:
         """
-        if self.__hash_type == "ntlm":
-            return hashlib.new("md4", data.encode("utf-16le")).hexdigest()
+        if self.__hashers.get(self.__hash_type) is None:
+            hashlib_type = self.__hash_type if self.__hash_type != "ntlm" else "md4"
+            self.__hashers[self.__hash_type] = hashlib.new(hashlib_type)
 
-        return hashlib.new(self.__hash_type, data.encode("utf-8")).hexdigest()
+        encoded = data.encode("utf-8") if self.__hash_type != "ntlm" else data.encode("utf-16le")
+        hasher = self.__hashers[self.__hash_type].copy()
+        hasher.update(encoded)
+        return hasher.hexdigest()
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -80,9 +85,6 @@ class Cracker(object):
         """
         self.start_reporting_progress()
         for value in self.__search_space(self.__charset, max_length):
-            if not q.empty():
-                return
-
             self.__curr_iter += 1
             self.__curr_val = value
             if self.__hash == self.generate_hash(value):
@@ -226,7 +228,9 @@ if __name__ == "__main__":
             failures += 1
         elif data == "FOUND":
             print(done_queue.get())
-            done_queue.put("DONE")
+            for p in processes:
+                p.terminate()
+
             break
 
         if failures == len(processes):
