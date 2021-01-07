@@ -29,12 +29,13 @@ The issue is Python's [GIL](https://wiki.python.org/moin/GlobalInterpreterLock) 
 This means that I am unable to achieve parallelism with threads since only one character set would be worked on at a time.
 What needs to be done instead is splitting the work up across multiple processes and share data across those processes.
 This is less efficient than working with threads in general but is a necessary evil with Python.
+Additionally, interpreted languages are not well suited to workloads that are 100% focused on compute.
+See the recommendations below for what you should do if you're serious about using this kind of tool.
 
 
 ### Recommendations
 
-Due to the performance explanations above *I would not recommend using Python for these kinds of tools.*
 You could consider this project an example of how to accomplish such a task using Python and an example of what kinds of issues you'd run into.
-Sure, the tool is certainly usable and works as it should, but if you are serious about building these kinds of tools I would look at using C, C++, Rust, or Go.
-Actually, I take that back. If you want an industry-competitive tool don't bother targeting the CPU.
-Instead use C/C++ that will run on GPUs and utilize CUDA, OpenCL, or ACL.
+The tool is certainly usable and may work for your scenario but keep in mind that it will run far slower than anything written in C, C++, Rust, or Go.
+If you require the highest performance possible get yourself a GPU and don't bother using any tools (including this one) that target the CPU.
+Look for something that makes use of CUDA, OpenCL, or ACL which will bring you into the domain of billions of hashes per second.

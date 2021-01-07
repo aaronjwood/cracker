@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import itertools
-import string
-import os
 import hashlib
-import time
+import itertools
 import multiprocessing
+import os
+import string
+import threading
+import time
 
 
 class Cracker(object):
@@ -27,13 +28,17 @@ class Cracker(object):
         string.ascii_lowercase, string.ascii_uppercase, ''.join(map(str, range(0, 10))), string.punctuation
     )
 
-    def __init__(self, hash_type, hash):
+    def __init__(self, hash_type, hash, charset, progress_interval):
         """
         Sets the hash type and actual hash to be used
         :param hash_type: What algorithm we want to use
         :param hash: The hash in base64 format
         :return:
         """
+        self.__charset = charset
+        self.__curr_iter = 0
+        self.__curr_val = ""
+        self.__progress_interval = progress_interval
         self.__hash_type = hash_type
         self.__hash = hash
 
@@ -66,36 +71,49 @@ class Cracker(object):
             )
         )
 
-    def attack(self, q, charset, maxlength):
+    def __attack(self, q, max_length):
         """
         Tries all possible combinations in the search space to try and find a match
         :param q: Work queue
-        :param charset: The character set to attack
-        :param maxlength: Maximum length of the character set to attack
+        :param max_length: Maximum length of the character set to attack
         :return:
         """
-        for attempt in self.__search_space(charset, maxlength):
+        self.start_reporting_progress()
+        for value in self.__search_space(self.__charset, max_length):
             if not q.empty():
                 return
 
-            if self.__hash == self.generate_hash(attempt):
+            self.__curr_iter += 1
+            self.__curr_val = value
+            if self.__hash == self.generate_hash(value):
                 q.put("FOUND")
-                q.put("{}Match found! Password is {}{}".format(os.linesep, attempt, os.linesep))
+                q.put("{}Match found! Password is {}{}".format(os.linesep, value, os.linesep))
+                self.stop_reporting_progress()
                 return
+
         q.put("NOT FOUND")
+        self.stop_reporting_progress()
 
     @staticmethod
-    def work(work_queue, done_queue, charset, maxlength):
+    def work(work_q, done_q, max_length):
         """
         Take the data given to us from some process and kick off the work
-        :param work_queue: This is what will give us work from some other process
-        :param done_queue: Used to signal the parent from some other process when we are done
-        :param charset: The character set to work on
-        :param maxlength: Maximum length of the character set
+        :param work_q: This is what will give us work from some other process
+        :param done_q: Used to signal the parent from some other process when we are done
+        :param max_length: Maximum length of the character set
         :return:
         """
-        obj = work_queue.get()
-        obj.attack(done_queue, charset, maxlength)
+        obj = work_q.get()
+        obj.__attack(done_q, max_length)
+
+    def start_reporting_progress(self):
+        self.__progress_timer = threading.Timer(self.__progress_interval, self.start_reporting_progress)
+        self.__progress_timer.start()
+        print(f"Character set: {self.__charset}, iteration: {self.__curr_iter}, value: {self.__curr_val}", flush=True)
+
+    def stop_reporting_progress(self):
+        self.__progress_timer.cancel()
+        print(f"Finished character set {self.__charset} after {self.__curr_iter} iterations", flush=True)
 
 
 if __name__ == "__main__":
@@ -178,25 +196,25 @@ if __name__ == "__main__":
         else:
             break
 
-    print("{}Cracking...{}".format(os.linesep, os.linesep), flush=True)
-
+    print(f"Trying to crack hash {user_hash}", flush=True)
     processes = []
     work_queue = multiprocessing.Queue()
     done_queue = multiprocessing.Queue()
-    cracker = Cracker(hash_type.lower(), user_hash.lower())
-
+    progress_interval = 3
+    cracker = Cracker(hash_type.lower(), user_hash.lower(), ''.join(selected_charset), progress_interval)
     start_time = time.time()
-
     p = multiprocessing.Process(target=Cracker.work,
-                                args=(work_queue, done_queue, ''.join(selected_charset), password_length))
+                                args=(work_queue, done_queue, password_length))
     processes.append(p)
     work_queue.put(cracker)
     p.start()
 
     if len(selected_charset) > 1:
         for i in range(len(selected_charset)):
+            progress_interval += .2
+            cracker = Cracker(hash_type.lower(), user_hash.lower(), selected_charset[i], progress_interval)
             p = multiprocessing.Process(target=Cracker.work,
-                                        args=(work_queue, done_queue, selected_charset[i], password_length))
+                                        args=(work_queue, done_queue, password_length))
             processes.append(p)
             work_queue.put(cracker)
             p.start()
