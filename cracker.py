@@ -44,9 +44,8 @@ class Cracker(object):
         self.__hashers = {}
 
     def __init_hasher(self):
-        if self.__hashers.get(self.__hash_type) is None:
-            hashlib_type = self.__hash_type if self.__hash_type != "ntlm" else "md4"
-            self.__hashers[self.__hash_type] = hashlib.new(hashlib_type)
+        hashlib_type = self.__hash_type if self.__hash_type != "ntlm" else "md4"
+        self.__hashers[self.__hash_type] = hashlib.new(hashlib_type)
 
     def __encode_utf8(self, data):
         return data.encode("utf-8")
