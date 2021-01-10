@@ -77,7 +77,8 @@ class Cracker(object):
 
     def __attack(self, q, max_length):
         """
-        Tries all possible combinations in the search space to try and find a match
+        Tries all possible combinations in the search space to try and find a match.
+        This is an extremely tight loop so we need to inline and reduce work as much as we can in here.
         :param q: Work queue
         :param max_length: Maximum length of the character set to attack
         :return:
