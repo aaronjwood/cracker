@@ -43,20 +43,19 @@ class Cracker(object):
         self.__hash = hash
         self.__hashers = {}
 
-    def generate_hash(self, data):
-        """
-        Generates a hash of the required type
-        :param data: What will be hashed
-        :return:
-        """
+    def __init_hasher(self):
         if self.__hashers.get(self.__hash_type) is None:
             hashlib_type = self.__hash_type if self.__hash_type != "ntlm" else "md4"
             self.__hashers[self.__hash_type] = hashlib.new(hashlib_type)
 
-        encoded = data.encode("utf-8") if self.__hash_type != "ntlm" else data.encode("utf-16le")
-        hasher = self.__hashers[self.__hash_type].copy()
-        hasher.update(encoded)
-        return hasher.hexdigest()
+    def __copy_hasher(self):
+        return self.__hashers[self.__hash_type].copy()
+
+    def __encode_utf8(self, data):
+        return data.encode("utf-8")
+
+    def __encode_utf16le(self, data):
+        return data.encode("utf-16le")
 
     @staticmethod
     def __search_space(charset, maxlength):
@@ -83,11 +82,15 @@ class Cracker(object):
         :param max_length: Maximum length of the character set to attack
         :return:
         """
+        self.__init_hasher()
         self.start_reporting_progress()
+        hash_fn = self.__encode_utf8 if self.__hash_type != "ntlm" else self.__encode_utf16le
         for value in self.__search_space(self.__charset, max_length):
+            hasher = self.__copy_hasher()
             self.__curr_iter += 1
             self.__curr_val = value
-            if self.__hash == self.generate_hash(value):
+            hasher.update(hash_fn(value))
+            if self.__hash == hasher.hexdigest():
                 q.put("FOUND")
                 q.put("{}Match found! Password is {}{}".format(os.linesep, value, os.linesep))
                 self.stop_reporting_progress()
