@@ -48,9 +48,6 @@ class Cracker(object):
             hashlib_type = self.__hash_type if self.__hash_type != "ntlm" else "md4"
             self.__hashers[self.__hash_type] = hashlib.new(hashlib_type)
 
-    def __copy_hasher(self):
-        return self.__hashers[self.__hash_type].copy()
-
     def __encode_utf8(self, data):
         return data.encode("utf-8")
 
@@ -87,7 +84,7 @@ class Cracker(object):
         self.start_reporting_progress()
         hash_fn = self.__encode_utf8 if self.__hash_type != "ntlm" else self.__encode_utf16le
         for value in self.__search_space(self.__charset, max_length):
-            hasher = self.__copy_hasher()
+            hasher = self.__hashers[self.__hash_type].copy()
             self.__curr_iter += 1
             self.__curr_val = value
             hasher.update(hash_fn(value))
