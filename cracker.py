@@ -37,6 +37,7 @@ class Cracker(object):
         """
         self.__charset = charset
         self.__curr_iter = 0
+        self.__prev_iter = 0
         self.__curr_val = ""
         self.__progress_interval = progress_interval
         self.__hash_type = hash_type
@@ -111,7 +112,10 @@ class Cracker(object):
     def start_reporting_progress(self):
         self.__progress_timer = threading.Timer(self.__progress_interval, self.start_reporting_progress)
         self.__progress_timer.start()
-        print(f"Character set: {self.__charset}, iteration: {self.__curr_iter}, value: {self.__curr_val}", flush=True)
+        print(
+            f"Character set: {self.__charset}, iteration: {self.__curr_iter}, trying: {self.__curr_val}, hashes/sec: {self.__curr_iter - self.__prev_iter}",
+            flush=True)
+        self.__prev_iter = self.__curr_iter
 
     def stop_reporting_progress(self):
         self.__progress_timer.cancel()
